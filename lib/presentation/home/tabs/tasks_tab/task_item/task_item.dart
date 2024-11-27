@@ -1,11 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:my_todo_app/config/styles/light_app_styles.dart';
 import 'package:my_todo_app/core/colors_manger.dart';
-import '../../../../../core/strings_manger.dart';
+import 'package:my_todo_app/database_manger/models/todo_model.dart';
+import '../tasks_tab.dart';
 
 class TaskItem extends StatelessWidget {
-  const TaskItem({super.key});
+  TaskItem({super.key , required this.todoModel , required this.onDeleteTask});
+  TodoModel todoModel;
+  GlobalKey<TasksTabState> taskTabStateKey = GlobalKey();
+  Function onDeleteTask;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +25,11 @@ class TaskItem extends StatelessWidget {
             motion: const ScrollMotion(),
             children: [
               SlidableAction(
-                onPressed: (context) => print('Delete'),
+                onPressed:(context) {
+                  deleteTaskFromFireStore(todoModel);
+                  onDeleteTask();
+                   // taskTabStateKey.currentState?.getTaskFromFireBase();
+                },
                 icon: Icons.delete,
                 label: 'Delete',
                 backgroundColor: Colors.red,
@@ -61,15 +70,15 @@ class TaskItem extends StatelessWidget {
                 const Spacer(
                   flex: 1,
                 ),
-                const Column(
+                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      StringsManger.taskName,
+                      todoModel.title,
                       style: LightAppStyles.taskName,
                     ),
                     Text(
-                      StringsManger.taskDate,
+                      todoModel.description,
                       style: LightAppStyles.taskDate,
                     )
                   ],
@@ -104,5 +113,12 @@ class TaskItem extends StatelessWidget {
         ),
       ),
     );
+  }
+  deleteTaskFromFireStore(TodoModel todo) async{
+    CollectionReference collectionReference = FirebaseFirestore.instance.collection(TodoModel.collectionName);
+    DocumentReference documentReference = collectionReference.doc(todoModel.id);
+    await documentReference.delete();
+    print('task deleted');
+
   }
 }
