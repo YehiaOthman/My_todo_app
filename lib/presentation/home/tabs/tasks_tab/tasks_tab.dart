@@ -3,6 +3,7 @@ import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:my_todo_app/config/styles/light_app_styles.dart';
 import 'package:my_todo_app/database_manger/models/todo_model.dart';
+import 'package:my_todo_app/database_manger/models/userDM.dart';
 import 'package:my_todo_app/presentation/home/tabs/tasks_tab/task_item/task_item.dart';
 import 'package:my_todo_app/utils/ex_fun/data_time_format.dart';
 
@@ -94,7 +95,7 @@ class TasksTabState extends State<TasksTab> {
 
   getTaskFromFireBase() async {
     CollectionReference collectionReference =
-        FirebaseFirestore.instance.collection(TodoModel.collectionName);
+        FirebaseFirestore.instance.collection(UserDM.collectionName).doc(UserDM.currentUserId!.id).collection(TodoModel.collectionName);
     QuerySnapshot querySnapshot = await collectionReference.get();
     List<QueryDocumentSnapshot> queryDocumentSnapShot = querySnapshot.docs;
     todoList = queryDocumentSnapShot.map(

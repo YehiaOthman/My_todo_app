@@ -150,8 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: userNameController.text, password: passwordController.text);
-      UserDM user = await readUserFromFireStore(credential.user!.uid);
-      print(user.fullName);
+      UserDM.currentUserId = await readUserFromFireStore(credential.user!.uid);
       Navigator.pushReplacementNamed(context, RoutesManger.homeScreen);
 
 

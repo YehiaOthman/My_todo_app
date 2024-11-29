@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:my_todo_app/config/styles/light_app_styles.dart';
 import 'package:my_todo_app/core/colors_manger.dart';
 import 'package:my_todo_app/database_manger/models/todo_model.dart';
+import '../../../../../database_manger/models/userDM.dart';
 import '../tasks_tab.dart';
 
 class TaskItem extends StatelessWidget {
@@ -115,7 +116,8 @@ class TaskItem extends StatelessWidget {
     );
   }
   deleteTaskFromFireStore(TodoModel todo) async{
-    CollectionReference collectionReference = FirebaseFirestore.instance.collection(TodoModel.collectionName);
+    CollectionReference collectionReference =
+    FirebaseFirestore.instance.collection(UserDM.collectionName).doc(UserDM.currentUserId!.id).collection(TodoModel.collectionName);
     DocumentReference documentReference = collectionReference.doc(todoModel.id);
     await documentReference.delete();
     print('task deleted');

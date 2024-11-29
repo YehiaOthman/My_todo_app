@@ -1,6 +1,6 @@
 class UserDM {
   static const String collectionName = 'User';
-  static String? currentId;
+  static UserDM? currentUserId;
   String id;
   String fullName;
   String userName;
