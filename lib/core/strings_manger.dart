@@ -25,4 +25,8 @@ class StringsManger{
   static const String enterYourFullName = "enter your full name";
   static const String enterYourMobilePhone = "enter mobile phone";
   static const String enterYourEmail = "enter your e-mail";
+  static const String titleEditTask = "Edit Task";
+  static const String editTaskTitle = "This is title";
+  static const String editTaskDescription = "Task details";
+  static const String saveChanges = "Save Changes";
 }

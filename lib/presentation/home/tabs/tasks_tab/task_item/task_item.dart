@@ -3,15 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:my_todo_app/config/styles/light_app_styles.dart';
 import 'package:my_todo_app/core/colors_manger.dart';
+import 'package:my_todo_app/core/routes_manger.dart';
 import 'package:my_todo_app/database_manger/models/todo_model.dart';
+import 'package:my_todo_app/utils/helper_fun/helper_fun.dart';
 import '../../../../../database_manger/models/userDM.dart';
 import '../tasks_tab.dart';
 
-class TaskItem extends StatelessWidget {
+class TaskItem extends StatefulWidget {
   TaskItem({super.key , required this.todoModel , required this.onDeleteTask});
   TodoModel todoModel;
-  GlobalKey<TasksTabState> taskTabStateKey = GlobalKey();
   Function onDeleteTask;
+
+  @override
+  State<TaskItem> createState() => _TaskItemState();
+}
+
+class _TaskItemState extends State<TaskItem> {
+  GlobalKey<TasksTabState> taskTabStateKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +35,8 @@ class TaskItem extends StatelessWidget {
             children: [
               SlidableAction(
                 onPressed:(context) {
-                  deleteTaskFromFireStore(todoModel);
-                  onDeleteTask();
+                  deleteTaskFromFireStore(widget.todoModel);
+                  widget.onDeleteTask();
                    // taskTabStateKey.currentState?.getTaskFromFireBase();
                 },
                 icon: Icons.delete,
@@ -45,7 +53,10 @@ class TaskItem extends StatelessWidget {
             motion: const ScrollMotion(),
             children: [
               SlidableAction(
-                onPressed: (context) => print('Edit'),
+                onPressed: (context) => Navigator.pushReplacementNamed(
+                  context,RoutesManger.editTaskScreen,
+                  arguments: widget.todoModel
+                ),
                 icon: Icons.edit,
                 label: 'Edit',
                 backgroundColor: ColorsManger.secondary,
@@ -66,7 +77,7 @@ class TaskItem extends StatelessWidget {
                     width: 5,
                     height: MediaQuery.of(context).size.height * 0.08,
                     decoration: BoxDecoration(
-                        color: ColorsManger.secondary,
+                        color:  widget.todoModel.isDone ? Colors.green  : ColorsManger.secondary,
                         borderRadius: BorderRadius.circular(15))),
                 const Spacer(
                   flex: 1,
@@ -75,25 +86,33 @@ class TaskItem extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      todoModel.title,
-                      style: LightAppStyles.taskName,
+                      widget.todoModel.title,
+                      style: LightAppStyles.taskName.copyWith(
+                          color: widget.todoModel.isDone ? Colors.green  : ColorsManger.secondary
+                      ),
                     ),
+                    const SizedBox(height: 12,),
                     Text(
-                      todoModel.description,
+                      widget.todoModel.description,
                       style: LightAppStyles.taskDate,
                     )
                   ],
                 ),
-                const Spacer(
+            const Spacer(
                   flex: 10,
                 ),
-                InkWell(
-                  onTap: () => print('Saved'),
-                  enableFeedback: true,
+            InkWell(
+                onTap: () {
+                  setState(() {
+                    widget.todoModel.isDone = !widget.todoModel.isDone;
+                  });
+                  isDone(widget.todoModel);
+                },
+            enableFeedback: true,
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: ColorsManger.secondary),
+                        color: widget.todoModel.isDone ? Colors.green  : ColorsManger.secondary),
                     child: const Padding(
                       padding:
                           EdgeInsets.symmetric(horizontal: 15, vertical: 2),
@@ -115,10 +134,11 @@ class TaskItem extends StatelessWidget {
       ),
     );
   }
+
   deleteTaskFromFireStore(TodoModel todo) async{
     CollectionReference collectionReference =
     FirebaseFirestore.instance.collection(UserDM.collectionName).doc(UserDM.currentUserId!.id).collection(TodoModel.collectionName);
-    DocumentReference documentReference = collectionReference.doc(todoModel.id);
+    DocumentReference documentReference = collectionReference.doc(widget.todoModel.id);
     await documentReference.delete();
     print('task deleted');
 

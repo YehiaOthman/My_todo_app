@@ -131,8 +131,8 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
         description: taskDescriptionController.text,
         date: currentDate,
         isDone: false);
-    todoDocuments.set(todo.toFireStore()).then((value) =>
-      {if (mounted) Navigator.pop(context), print('done')},
+    todoDocuments.set(todo.toFireStore()).then(
+          (value) => {if (mounted) Navigator.pop(context), print('done')},
         );
   }
 

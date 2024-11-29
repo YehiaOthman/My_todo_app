@@ -3,4 +3,5 @@ class RoutesManger{
   static const homeScreen = "/homeScreen";
   static const loginScreen = "/loginScreen";
   static const signUpScreen = "/signUpScreen";
+  static const editTaskScreen = "/editTaskScreen";
 }
