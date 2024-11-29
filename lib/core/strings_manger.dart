@@ -20,7 +20,7 @@ class StringsManger{
   static const String createAccount = "Don't have an account? Create Account";
   static const String signUp = "Sign up";
   static const String fullName = "Full Name";
-  static const String mobilePhone = "Mobile Number";
+  static const String rePassword = "Re-password";
   static const String eMail = "E-mail address";
   static const String enterYourFullName = "enter your full name";
   static const String enterYourMobilePhone = "enter mobile phone";

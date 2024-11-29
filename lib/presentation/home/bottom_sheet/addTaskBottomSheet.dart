@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:my_todo_app/database_manger/models/todo_model.dart';
+import 'package:my_todo_app/database_manger/models/userDM.dart';
 import 'package:my_todo_app/utils/ex_fun/data_time_format.dart';
 import '../../../config/styles/light_app_styles.dart';
 import '../../../core/colors_manger.dart';
@@ -118,18 +119,20 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
   addTaskToFireStore() {
     if (_formStateKey.currentState!.validate() == false) return;
 
-    CollectionReference collectionReference =
-        FirebaseFirestore.instance.collection(TodoModel.collectionName);
-    DocumentReference documentReference = collectionReference.doc();
+    CollectionReference usersCollection =
+        FirebaseFirestore.instance.collection(UserDM.collectionName);
+    CollectionReference todoCollection = usersCollection
+        .doc(UserDM.currentUserId!.id)
+        .collection(TodoModel.collectionName);
+    DocumentReference todoDocuments = todoCollection.doc();
     TodoModel todo = TodoModel(
-        id: documentReference.id,
+        id: todoDocuments.id,
         title: taskTitleController.text,
         description: taskDescriptionController.text,
         date: currentDate,
         isDone: false);
-    documentReference.set(todo.toFireStore()).timeout(
-          const Duration(milliseconds: 500),
-          onTimeout: () => {if (mounted) Navigator.pop(context), print('done')},
+    todoDocuments.set(todo.toFireStore()).then((value) =>
+      {if (mounted) Navigator.pop(context), print('done')},
         );
   }
 

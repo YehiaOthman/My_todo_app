@@ -7,8 +7,8 @@ import '../my_app/my_app.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,);
-  await FirebaseFirestore.instance.disableNetwork(); // make data cache offline
+    options: DefaultFirebaseOptions.currentPlatform,);
+  await FirebaseFirestore.instance.enableNetwork(); // make data cache offline
   runApp(const MyApp());
 }
 
