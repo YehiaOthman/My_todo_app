@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_todo_app/presentation/auth/login_screen/login_screen.dart';
 import 'package:my_todo_app/presentation/auth/sign_up_screen/sign_up_screen.dart';
+import 'package:my_todo_app/presentation/home/tabs/tasks_tab/edit_task_screen/edit_task.dart';
 import '../config/theme/my_theme.dart';
 import '../core/routes_manger.dart';
 import '../presentation/home/home_screen.dart';
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         RoutesManger.homeScreen :(_) => const HomeScreen(),
         RoutesManger.loginScreen :(_) => const LoginScreen(),
         RoutesManger.signUpScreen :(_) => const SignUpScreen(),
+        RoutesManger.editTaskScreen :(_) => const EditTask(),
       },
       initialRoute: RoutesManger.splashScreen,
     );
