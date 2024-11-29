@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import '../firebase_options.dart';
 import '../my_app/my_app.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,);
-  await FirebaseFirestore.instance.disableNetwork(); // make data cache offline
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseFirestore.instance.settings = const Settings(
+    persistenceEnabled: true, // Enable offline caching
+    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+  );
   runApp(const MyApp());
 }
-
